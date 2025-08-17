@@ -1,0 +1,48 @@
+name: Build ESP32 Firmware
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      # Build cho ESP32 DEVKIT V1
+      - name: Build ESP32 (CP2102)
+        run: pio run -e esp32_cp2102
+
+      - name: Upload ESP32 artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: esp32_cp2102_build
+          path: |
+            .pio/build/esp32_cp2102/firmware.bin
+            .pio/build/esp32_cp2102/partitions_custom.bin
+
+      # Build cho ESP32-C3
+      - name: Build ESP32-C3
+        run: pio run -e esp32_c3
+
+      - name: Upload ESP32-C3 artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp32_c3_build
+          path: |
+            .pio/build/esp32_c3/firmware.bin
+            .pio/build/esp32_c3/partitions_custom.bin
