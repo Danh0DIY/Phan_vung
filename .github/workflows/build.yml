@@ -28,7 +28,7 @@ jobs:
         run: pio run -e esp32_cp2102
 
       - name: Upload ESP32 artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: esp32_cp2102_build
           path: |
